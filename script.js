@@ -18,6 +18,21 @@ if (navigator.geolocation)
       const { longitude } = position.coords;
       //   console.log(position);
       console.log(`https://www.google.pt/maps/@${latitude},${longitude}`);
+
+            // Leaflet library
+      const coords = [latitude, longitude];
+      const map = L.map('map').setView(coords, 13);
+
+      // https://wiki.openstreetmap.org/wiki/Raster_tile_providers
+      L.tileLayer('https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      L.marker(coords)
+        .addTo(map)
+        .bindPopup('A pretty CSS popup.<br> Easily customizable.')
+        .openPopup();
     },
     function () {
       alert('Could not get your position');
