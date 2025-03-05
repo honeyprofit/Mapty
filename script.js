@@ -19,7 +19,7 @@ if (navigator.geolocation)
       //   console.log(position);
       console.log(`https://www.google.pt/maps/@${latitude},${longitude}`);
 
-            // Leaflet library
+      // Leaflet library
       const coords = [latitude, longitude];
       const map = L.map('map').setView(coords, 13);
 
