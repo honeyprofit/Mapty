@@ -24,6 +24,7 @@ if (navigator.geolocation)
       // Leaflet library
       const coords = [latitude, longitude];
       map = L.map('map').setView(coords, 13);
+      // console.log(map);
 
       // https://wiki.openstreetmap.org/wiki/Raster_tile_providers
       L.tileLayer('https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -57,7 +58,7 @@ form.addEventListener('submit', function (e) {
     inputDuration.value =
     inputCadence.value =
     inputElevation.value =
-      '';
+    '';
 
   console.log(mapEvent);
   const { lat, lng } = mapEvent.latlng;
