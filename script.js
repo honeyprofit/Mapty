@@ -13,42 +13,57 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 let map, mapEvent;
 
-if (navigator.geolocation)
-  navigator.geolocation.getCurrentPosition(
-    function (position) {
-      const { latitude } = position.coords;
-      const { longitude } = position.coords;
-      //   console.log(position);
-      console.log(`https://www.google.pt/maps/@${latitude},${longitude}`);
+class App {
+  constructor() {
+    this._getPosition();
+  }
 
-      // Leaflet library
-      const coords = [latitude, longitude];
-      map = L.map('map').setView(coords, 13);
-      // console.log(map);
-
-      // https://wiki.openstreetmap.org/wiki/Raster_tile_providers
-      L.tileLayer('https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
-
-      L.marker(coords)
-        .addTo(map)
-        .bindPopup('A pretty CSS popup.<br> Easily customizable.')
-        .openPopup();
-
-      // Handeling clicks on map
-      map.on('click', function (mapE) {
-        mapEvent = mapE;
-        //show form
-        form.classList.remove('hidden');
-        inputDistance.focus();
+  _getPosition() {
+    if (navigator.geolocation)
+      navigator.geolocation.getCurrentPosition(this._loadMap, function () {
+        alert('Could not get your position');
       });
-    },
-    function () {
-      alert('Could not get your position');
-    }
-  );
+  }
+
+  _loadMap(position) {
+    const { latitude } = position.coords;
+    const { longitude } = position.coords;
+    //   console.log(position);
+    console.log(`https://www.google.pt/maps/@${latitude},${longitude}`);
+
+    // Leaflet library
+    const coords = [latitude, longitude];
+    map = L.map('map').setView(coords, 13);
+    // console.log(map);
+
+    // https://wiki.openstreetmap.org/wiki/Raster_tile_providers
+    L.tileLayer('https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    L.marker(coords)
+      .addTo(map)
+      .bindPopup('A pretty CSS popup.<br> Easily customizable.')
+      .openPopup();
+
+    // Handeling clicks on map
+    map.on('click', function (mapE) {
+      mapEvent = mapE;
+      //show form
+      form.classList.remove('hidden');
+      inputDistance.focus();
+    });
+  }
+
+  _showForm() {}
+
+  _toggleElevationField() {}
+
+  _newWorkout() {}
+}
+
+const app = new App();
 
 form.addEventListener('submit', function (e) {
   e.preventDefault();
@@ -58,7 +73,7 @@ form.addEventListener('submit', function (e) {
     inputDuration.value =
     inputCadence.value =
     inputElevation.value =
-    '';
+      '';
 
   console.log(mapEvent);
   const { lat, lng } = mapEvent.latlng;
@@ -84,3 +99,4 @@ inputType.addEventListener('change', function () {
   inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
 });
 
+// console.log(firstName);
