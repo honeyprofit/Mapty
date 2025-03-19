@@ -15,9 +15,12 @@ class Workout {
 }
 
 class Running extends Workout {
+  type = 'running';
+
   constructor(coords, distance, duration, cadence) {
     super(coords, distance, duration);
     this.dacence = cadence;
+    this.type = 'running';
     this.calcPace();
   }
 
@@ -29,9 +32,12 @@ class Running extends Workout {
 }
 
 class Cycling extends Workout {
+  type = 'cycling';
+
   constructor(coords, distance, duration, elevationGain) {
     super(coords, distance, duration);
     this.elevationGain = elevationGain;
+    this.type = 'cycling';
     return this.calcSpeed();
   }
 
@@ -168,22 +174,9 @@ class App {
 
     // Render workout on map as marker
     // console.log(this.#mapEvent);
-
     // console.log(lat, lng);
+    this.renderWorkoutMarker(workout);
 
-    L.marker({ lat, lng })
-      .addTo(this.#map)
-      .bindPopup(
-        L.popup({
-          maxWidth: 250,
-          minWidth: 100,
-          autoClose: false,
-          closeOnClick: false,
-          className: 'running-popup',
-        })
-      )
-      .setPopupContent('Workout')
-      .openPopup();
     // Render workout on list
 
     // Hide form + clear input field
@@ -194,6 +187,22 @@ class App {
       inputCadence.value =
       inputElevation.value =
         '';
+  }
+
+  renderWorkoutMarker(workout) {
+    L.marker(workout.coords)
+      .addTo(this.#map)
+      .bindPopup(
+        L.popup({
+          maxWidth: 250,
+          minWidth: 100,
+          autoClose: false,
+          closeOnClick: false,
+          className: `${workout.type}-popup`,
+        })
+      )
+      .setPopupContent('workout.type') //need to fix
+      .openPopup();
   }
 }
 
