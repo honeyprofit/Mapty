@@ -15,7 +15,7 @@ class Workout {
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on
-      month[${this.date.getMonth()}]
+      ${months[this.date.getMonth()]}
      ${this.date.getDate()}`;
   }
 }
@@ -25,7 +25,7 @@ class Running extends Workout {
 
   constructor(coords, distance, duration, cadence) {
     super(coords, distance, duration);
-    this.dacence = cadence;
+    this.cadence = cadence;
     this.type = 'running';
     this.calcPace();
     this._setDescription();
@@ -125,6 +125,18 @@ class App {
     inputDistance.focus();
   }
 
+  _hideForm() {
+    // Clear input fields
+    inputDistance.value =
+      inputDuration.value =
+      inputCadence.value =
+      inputElevation.value =
+        '';
+    form.style.display = 'none';
+    form.classList.add('hidden');
+    setTimeout(() => (form.style.display = 'grid'), 1000);
+  }
+
   _toggleElevationField() {
     inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
     inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
@@ -189,13 +201,7 @@ class App {
     this._renderWorkout(workout);
 
     // Hide form + clear input field
-
-    // Clear input fields
-    inputDistance.value =
-      inputDuration.value =
-      inputCadence.value =
-      inputElevation.value =
-        '';
+    this._hideForm();
   }
 
   _renderWorkoutMarker(workout) {
@@ -210,7 +216,9 @@ class App {
           className: `${workout.type}-popup`,
         })
       )
-      .setPopupContent('workout.type') //need to fix
+      .setPopupContent(
+        `${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'} ${workout.description}`
+      )
       .openPopup();
   }
 
