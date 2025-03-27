@@ -3,6 +3,7 @@
 class Workout {
   date = new Date();
   id = (Date.now() + '').slice(-10);
+  clicks = 0;
 
   constructor(coords, distance, duration) {
     this.coords = coords; // [lat, lng]
@@ -17,6 +18,10 @@ class Workout {
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on
       ${months[this.date.getMonth()]}
      ${this.date.getDate()}`;
+  }
+
+  click() {
+    this.clicks++;
   }
 }
 
@@ -72,6 +77,7 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 class App {
   #map;
+  #mapZoomLevel = 13;
   #mapEvent;
   #workouts = [];
 
@@ -79,6 +85,7 @@ class App {
     this._getPosition();
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
+    containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
   }
 
   _getPosition() {
@@ -99,7 +106,7 @@ class App {
 
     // Leaflet library
     const coords = [latitude, longitude];
-    this.#map = L.map('map').setView(coords, 13);
+    this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
     // console.log(map);
     console.log(this);
 
@@ -270,6 +277,28 @@ class App {
     `;
 
     form.insertAdjacentHTML('afterend', html);
+  }
+
+  _moveToPopup(e) {
+    const workoutEl = e.target.closest('.workout');
+    console.log(workoutEl);
+
+    if (!workoutEl) return;
+
+    const workout = this.#workouts.find(
+      work => work.id === workoutEl.dataset.id
+    );
+    console.log(workout);
+
+    this.#map.setView(workout.coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+    });
+
+    //using the public interface
+    workout.click();
   }
 }
 
