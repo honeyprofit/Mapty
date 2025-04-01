@@ -114,7 +114,7 @@ class App {
     const coords = [latitude, longitude];
     this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
     // console.log(map);
-    console.log(this);
+    // console.log(this);
 
     // https://wiki.openstreetmap.org/wiki/Raster_tile_providers
     L.tileLayer('https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -129,6 +129,11 @@ class App {
 
     // Handeling clicks on map
     this.#map.on('click', this._showForm.bind(this));
+
+    this.#workouts.forEach(work => {
+      // this._renderWorkout(work);
+      this._renderWorkoutMarker(work);
+    });
   }
 
   _showForm(mapE) {
@@ -203,7 +208,7 @@ class App {
 
     // Add new object to workout array
     this.#workouts.push(workout);
-    console.log(workout);
+    // console.log(workout);
 
     // Render workout on map as marker
     // console.log(this.#mapEvent);
@@ -297,7 +302,7 @@ class App {
     const workout = this.#workouts.find(
       work => work.id === workoutEl.dataset.id
     );
-    console.log(workout);
+    // console.log(workout);
 
     this.#map.setView(workout.coords, this.#mapZoomLevel, {
       animate: true,
@@ -307,7 +312,7 @@ class App {
     });
 
     //using the public interface
-    workout.click();
+    // workout.click();
   }
 
   _setLocalStorage() {
@@ -317,6 +322,20 @@ class App {
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem('workouts'));
     console.log(data);
+
+    if (!data) return;
+
+    this.#workouts = data;
+
+    this.#workouts.forEach(work => {
+      this._renderWorkout(work);
+      // this._renderWorkoutMarker(work);
+    });
+  }
+
+  reset() {
+    localStorage.removeItem('workouts');
+    location.reload();
   }
 }
 
